@@ -17,7 +17,7 @@ router.post('/', (req, res) => {
 	if (action.project_id && action.description && action.notes) {
 		db('actions')
 			.insert(action, 'id')
-			.then((id) => {
+			.then((ids) => {
 				db('actions').where({ id: ids[0] }).first().then((action) => {
 					res.status(200).json(action);
 				});
@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
 				res.status(500).json(err);
 			});
 	} else {
-		res.status(400).json({ message: 'Please provide description, notes and ID of project.' });
+		res.status(400).json({ message: 'Please provide ID of project, description and notes.' });
 	}
 });
 

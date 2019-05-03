@@ -3,7 +3,7 @@ exports.up = function(knex, Promise) {
 		projects.increments();
 
 		projects.string('name', 128).notNullable();
-		projects.text('description').notNullable();
+		projects.string('description').notNullable();
 		projects.boolean('completed').defaultTo(false);
 	});
 };

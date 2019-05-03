@@ -35,7 +35,7 @@ router.post('/', (req, res) => {
 		db('projects')
 			.insert(req.body, 'id')
 			.then((ids) => {
-				db('projects').where({ id: id }).first().then((project) => {
+				db('projects').where({ id: ids[0] }).first().then((project) => {
 					res.status(200).json(project);
 				});
 			})
