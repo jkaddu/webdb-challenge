@@ -11,16 +11,26 @@ const knexConfig = {
 
 const db = knex(knexConfig);
 
-router.get('/:id/actions', (req, res) => {
+router.get('/', (req, res) => {
 	db('projects')
-		.where({ id: req.params.id })
+		.then((project) => {
+			res.status(200).json(project);
+		})
+		.catch((err) => {
+			res.status(500).json(err);
+		});
+});
+
+router.get('/project/:id', (req, res) => {
+	const { id } = req.params;
+	db('projects')
+		.where({ id: id })
 		.first()
 		.then((project) => {
-			if (project) {
-				res.status(200).json(project);
-			} else {
-				res.status(404).json({ message: 'Project not found.' });
-			}
+			db('actions').where({ project_id: id }).then((action) => {
+				project.action = action;
+				return res.status(200).json(project);
+			});
 		})
 		.catch((err) => {
 			console.log(err);
