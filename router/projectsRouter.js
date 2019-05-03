@@ -11,21 +11,38 @@ const knexConfig = {
 
 const db = knex(knexConfig);
 
-router.post('/', (req, res) => {
-	const project = req.body;
+router.get('/:id/actions', (req, res) => {
+	db('projects')
+		.where({ id: req.params.id })
+		.first()
+		.then((project) => {
+			if (project) {
+				res.status(200).json(project);
+			} else {
+				res.status(404).json({ message: 'Project not found.' });
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+			res.status(500).json(err);
+		});
+});
 
-	if (project.name && project.description) {
+router.post('/', (req, res) => {
+	if (!req.body.name || !req.body.description) {
+		res.status(400).json({ message: 'Please provide a name and description.' });
+	} else {
 		db('projects')
-			.insert(project, 'id')
-			.then((id) => {
-				db('projects').where({ id: ids[0] }).first().then((project) => {
+			.insert(req.body, 'id')
+			.then((ids) => {
+				db('projects').where({ id: id }).first().then((project) => {
 					res.status(200).json(project);
 				});
 			})
 			.catch((err) => {
 				res.status(500).json(err);
 			});
-	} else {
-		res.status(400).json({ message: 'Please provide name and description.' });
 	}
 });
+
+module.exports = router;

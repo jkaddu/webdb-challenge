@@ -14,7 +14,7 @@ const db = knex(knexConfig);
 router.post('/', (req, res) => {
 	const action = req.body;
 
-	if (action.name && action.notes && action.project_id) {
+	if (action.project_id && action.description && action.notes) {
 		db('actions')
 			.insert(action, 'id')
 			.then((id) => {
@@ -26,6 +26,8 @@ router.post('/', (req, res) => {
 				res.status(500).json(err);
 			});
 	} else {
-		res.status(400).json({ message: 'Please provide name, notes and ID of project.' });
+		res.status(400).json({ message: 'Please provide description, notes and ID of project.' });
 	}
 });
+
+module.exports = router;
